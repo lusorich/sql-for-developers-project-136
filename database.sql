@@ -52,3 +52,29 @@ CREATE TABLE program_modules (
   module_id REFERENCES modules(id) NOT NULL,
   program_id REFERENCES programs(id) NOT NULL
 );
+
+CREATE TYPE user_type AS ENUM ('student', 'teacher', 'admin');
+
+CREATE TABLE users (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name varchar(255),
+  email varchar(255),
+  password varchar(255),
+  group_link varchar(255),
+  created_at timestamp,
+  updated_at timestamp,
+  type user_type
+);
+
+CREATE TABLE teaching_groups (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  slug varchar(255),
+  created_at timestamp,
+  updated_at timestamp
+);
+
+CREATE TABLE user_groups (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id REFERENCES users(id) NOT NULL,
+  teaching_group_id REFERENCES teaching_groups(id) NOT NULL
+);
