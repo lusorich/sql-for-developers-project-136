@@ -78,3 +78,48 @@ CREATE TABLE user_groups (
   user_id REFERENCES users(id) NOT NULL,
   teaching_group_id REFERENCES teaching_groups(id) NOT NULL
 );
+
+CREATE TYPE subscription_status AS ENUM ('active', 'pending', 'cancelled', 'completed');
+
+CREATE TYPE payment_status AS ENUM ('pending', 'paid', 'failed', 'refunded');
+CREATE TYPE program_status AS ENUM ('active', 'completed', 'pending', 'cancelled');
+
+CREATE TABLE enrollments (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id REFERENCES users(id) NOT NULL,
+  program_id REFERENCES programs(id) NOT NULL,
+  status subscription_status,
+  created_at timestamp,
+  updated_at timestamp,
+);
+
+CREATE TABLE payments (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  enrollment_id REFERENCES enrollments(id) NOT NULL,
+  payment_sum int,
+  status payment_status,
+  payment_date date,
+  created_at timestamp,
+  updated_at timestamp
+);
+
+CREATE TABLE program_completions (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id REFERENCES users(id) NOT NULL,
+  program_id REFERENCES programs(id) NOT NULL,
+  status program_status,
+  start_date date,
+  end_date date,
+  created_at timestamp,
+  updated_at timestamp
+);
+
+CREATE TABLE certificates (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id REFERENCES users(id) NOT NULL,
+  program_id REFERENCES programs(id) NOT NULL,
+  url varchar(255),
+  certification_date date,
+  created_at timestamp,
+  updated_at timestamp
+);
