@@ -90,7 +90,7 @@ CREATE TABLE enrollments (
   program_id REFERENCES programs(id) NOT NULL,
   status subscription_status,
   created_at timestamp,
-  updated_at timestamp,
+  updated_at timestamp
 );
 
 CREATE TABLE payments (
@@ -123,3 +123,58 @@ CREATE TABLE certificates (
   created_at timestamp,
   updated_at timestamp
 );
+
+CREATE TABLE questions(
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  quiz_id REFERENCES quizzes(id) NOT NULL,
+  content varchar(255) 
+)
+
+CREATE TABLE answers(
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  question_id REFERENCES questions(id) NOT NULL,
+  content varchar(255),
+  is_correct boolean
+);
+
+CREATE TABLE quizzes (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  lesson_id REFERENCES lessons(id) NOT NULL,
+  name varchar(255),
+  question_id REFERENCES questions(id) NOT NULL,
+  created_at timestamp,
+  updated_at timestamp
+);
+
+CREATE TABLE exercises (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  lesson_id REFERENCES lessons(id) NOT NULL,
+  name varchar(255),
+  url varchar(255),
+  created_at timestamp,
+  updated_at timestamp
+);
+
+CREATE TABLE discussions(
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  lesson_id REFERENCES lessons(id) NOT NULL,
+  content varchar(255),
+  parent_id int NOT NULL,
+  created_at timestamp,
+  updated_at timestamp
+);
+
+CREATE TYPE blog_status AS ENUM ('created', 'in moderation', 'published', 'archived');
+
+CREATE TABLE enrollments (
+  id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id REFERENCES users(id) NOT NULL,
+  title varchar(255),
+  content varchar(255),
+  status blog_status,
+  created_at timestamp,
+  updated_at timestamp
+);
+
+
+
